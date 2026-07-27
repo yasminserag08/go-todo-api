@@ -13,13 +13,7 @@ type todo struct {
 	Completed bool   `json:"completed"`
 }
 
-var todos = []todo{
-	{
-		ID:        1,
-		Title:     "task1",
-		Completed: true,
-	},
-}
+var todos = []todo{}
 
 var nextID int = 1
 
@@ -50,7 +44,23 @@ func getTaskById(c *gin.Context) {
 }
 
 func addTask(c *gin.Context) {
-	// TODO
+	var newTask todo
+	err := c.ShouldBindJSON(&newTask)
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	if len(newTask.Title) == 0 {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "empty title"})
+		return
+	}
+
+	newTask.ID = nextID
+	nextID += 1
+	todos = append(todos, newTask)
+	c.JSON(http.StatusOK, gin.H{"success": "task added"})
 }
 
 func editTask(c *gin.Context) {
