@@ -40,7 +40,7 @@ func getTaskById(c *gin.Context) {
 		}
 	}
 
-	// id was a number but not an id of an existing todo
+	// id was a number but not of an existing todo
 	c.JSON(http.StatusNotFound, gin.H{"error": "Todo not found"})
 }
 
@@ -65,7 +65,36 @@ func addTask(c *gin.Context) {
 }
 
 func editTask(c *gin.Context) {
-	// TODO
+	id := c.Param("id")
+	// id sent was not a number
+	idInt, err := strconv.Atoi(id)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid ID"})
+		return
+	}
+
+	var updatedTodo todo
+
+	for i, item := range todos {
+		if item.ID == idInt {
+			err := c.ShouldBindJSON(&updatedTodo)
+			if err != nil {
+				c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			} else {
+				if updatedTodo.Title != nil {
+					todos[i].Title = updatedTodo.Title
+				}
+				if updatedTodo.Completed != nil {
+					todos[i].Completed = updatedTodo.Completed
+				}
+				c.JSON(http.StatusOK, item)
+			}
+			return
+		}
+	}
+
+	// id was a number but not of an existing todo
+	c.JSON(http.StatusNotFound, gin.H{"error": "Todo not found"})
 }
 
 func deleteTask(c *gin.Context) {
@@ -86,6 +115,6 @@ func deleteTask(c *gin.Context) {
 		}
 	}
 
-	// id was a number but not an id of an existing todo
+	// id was a number but not of an existing todo
 	c.JSON(http.StatusNotFound, gin.H{"error": "Todo not found"})
 }
