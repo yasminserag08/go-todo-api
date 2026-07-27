@@ -29,7 +29,7 @@ func getTaskById(c *gin.Context) {
 	// id sent was not a number
 	idInt, err := strconv.Atoi(id)
 	if err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": "Todo not found"})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid ID"})
 		return
 	}
 
@@ -54,14 +54,14 @@ func addTask(c *gin.Context) {
 	}
 
 	if len(newTask.Title) == 0 {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "empty title"})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Title cannpt be empty"})
 		return
 	}
 
 	newTask.ID = nextID
 	nextID += 1
 	todos = append(todos, newTask)
-	c.JSON(http.StatusOK, gin.H{"success": "task added"})
+	c.JSON(http.StatusOK, newTask)
 }
 
 func editTask(c *gin.Context) {
@@ -74,14 +74,14 @@ func deleteTask(c *gin.Context) {
 	// id sent was not a number
 	idInt, err := strconv.Atoi(id)
 	if err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": "Todo not found"})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid ID"})
 		return
 	}
 
 	for i, item := range todos {
 		if item.ID == idInt {
 			todos = slices.Delete(todos, i, i+1)
-			c.JSON(http.StatusOK, gin.H{"success": "task deleted"})
+			c.JSON(http.StatusOK, gin.H{"success": "Todo deleted"})
 			return
 		}
 	}
