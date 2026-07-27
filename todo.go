@@ -54,7 +54,7 @@ func addTask(c *gin.Context) {
 	}
 
 	if len(*(newTask.Title)) == 0 {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Title cannpt be empty"})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Title cannot be empty"})
 		return
 	}
 
@@ -87,7 +87,7 @@ func editTask(c *gin.Context) {
 				if updatedTodo.Completed != nil {
 					todos[i].Completed = updatedTodo.Completed
 				}
-				c.JSON(http.StatusOK, item)
+				c.JSON(http.StatusOK, todos[i])
 			}
 			return
 		}
@@ -110,7 +110,7 @@ func deleteTask(c *gin.Context) {
 	for i, item := range todos {
 		if item.ID == idInt {
 			todos = slices.Delete(todos, i, i+1)
-			c.JSON(http.StatusOK, gin.H{"success": "Todo deleted"})
+			c.JSON(http.StatusOK, gin.H{"message": "Todo deleted"})
 			return
 		}
 	}
