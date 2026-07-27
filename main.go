@@ -13,9 +13,9 @@ func main() {
 
 	r.POST("/todos", addTask)
 
-	r.PUT("/todos:id", editTask)
+	r.PUT("/todos/:id", editTask)
 
-	r.DELETE("/todos:id", deleteTask)
+	r.DELETE("/todos/:id", deleteTask)
 
 	r.Run()
 }
