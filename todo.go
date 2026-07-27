@@ -9,9 +9,9 @@ import (
 )
 
 type todo struct {
-	ID        int    `json:"id"`
-	Title     string `json:"title"`
-	Completed bool   `json:"completed"`
+	ID        int     `json:"id"`
+	Title     *string `json:"title"`
+	Completed *bool   `json:"completed"`
 }
 
 var todos = []todo{}
@@ -53,7 +53,7 @@ func addTask(c *gin.Context) {
 		return
 	}
 
-	if len(newTask.Title) == 0 {
+	if len(*(newTask.Title)) == 0 {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Title cannpt be empty"})
 		return
 	}
